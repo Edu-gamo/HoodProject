@@ -104,8 +104,14 @@ public:
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 
+	bool activePowerPressed = false;
+	void ChangeActivePowerPressed();
 	bool crouched = false;
 	void Crouch();
+	float power = 1000000.f;
+	float maxPower = 1000000.f;
+	float minPower = 10000.f;
+	void ChangePower();
+	void ChangePowerValue(float value);
 	void ActivePower();
 };
-

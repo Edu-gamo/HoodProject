@@ -70,8 +70,14 @@ void AHoodProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AHoodProjectCharacter::Crouch);
 
+	PlayerInputComponent->BindAction("ChangePower", IE_Pressed, this, &AHoodProjectCharacter::ChangePower);
+	
+	PlayerInputComponent->BindAxis("ChangePowerValue", this, &AHoodProjectCharacter::ChangePowerValue);
+
 	//// Bind fire event (Powers)
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AHoodProjectCharacter::ActivePower); //Generate Raycast to detect object in front of player
+	PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ActivePower);
+	//if (activePowerPressed) ActivePower();
+	//PlayerInputComponent->BindAction("ActivePower", IE_Released, this, &AHoodProjectCharacter::ChangeActivePower);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -159,6 +165,24 @@ bool AHoodProjectCharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 	return false;
 }
 
+void AHoodProjectCharacter::ChangeActivePowerPressed() {
+	activePowerPressed = !activePowerPressed;
+}
+
+void AHoodProjectCharacter::ChangePower() {
+	power *= -1;
+}
+
+void AHoodProjectCharacter::ChangePowerValue(float value) {
+	if (power > 0) {
+		power += value * 100000;
+		FMath::Clamp<float>(power, minPower, maxPower);
+	} else {
+		power -= value * 100000;
+		FMath::Clamp<float>(power, -maxPower, -minPower);
+	}
+}
+
 void AHoodProjectCharacter::Crouch() {
 	if (!crouched) {
 		ACharacter::Crouch(true);
@@ -173,6 +197,7 @@ void AHoodProjectCharacter::Crouch() {
 void AHoodProjectCharacter::ActivePower() {
 
 	FHitResult* hitResult = new FHitResult();
+
 	FVector start = FirstPersonCameraComponent->GetComponentLocation();
 	FVector forward = FirstPersonCameraComponent->GetForwardVector();
 	FVector end = start+(forward * 5000.f);
@@ -181,6 +206,7 @@ void AHoodProjectCharacter::ActivePower() {
 	if (GetWorld()->LineTraceSingleByChannel(*hitResult, start, end, ECC_Visibility, *params)) {
 		DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *hitResult->Actor->GetName()));
+		hitResult->GetComponent()->AddImpulseAtLocation(forward * -power, hitResult->ImpactPoint);
 	}
 
 }
