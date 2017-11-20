@@ -20,6 +20,9 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 AHoodProjectCharacter::AHoodProjectCharacter()
 {
+
+	PrimaryActorTick.bCanEverTick = true; //Activa la funcion tick (update)
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -57,6 +60,15 @@ void AHoodProjectCharacter::BeginPlay()
 }
 
 //////////////////////////////////////////////////////////////////////////
+// Update
+void AHoodProjectCharacter::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime); // Call parent class tick function  
+
+	if (activePowerPressed) ActivePower();
+
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Input
 
 void AHoodProjectCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -75,9 +87,9 @@ void AHoodProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAxis("ChangePowerValue", this, &AHoodProjectCharacter::ChangePowerValue);
 
 	//// Bind fire event (Powers)
-	PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ActivePower);
-	//if (activePowerPressed) ActivePower();
-	//PlayerInputComponent->BindAction("ActivePower", IE_Released, this, &AHoodProjectCharacter::ChangeActivePower);
+	//PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ActivePower);
+	PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
+	PlayerInputComponent->BindAction("ActivePower", IE_Released, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -175,10 +187,10 @@ void AHoodProjectCharacter::ChangePower() {
 
 void AHoodProjectCharacter::ChangePowerValue(float value) {
 	if (power > 0) {
-		power += value * 100000;
+		power += value * powerOffset;
 		FMath::Clamp<float>(power, minPower, maxPower);
 	} else {
-		power -= value * 100000;
+		power -= value * powerOffset;
 		FMath::Clamp<float>(power, -maxPower, -minPower);
 	}
 }
@@ -204,9 +216,10 @@ void AHoodProjectCharacter::ActivePower() {
 	FCollisionQueryParams* params = new FCollisionQueryParams();
 
 	if (GetWorld()->LineTraceSingleByChannel(*hitResult, start, end, ECC_Visibility, *params)) {
-		DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *hitResult->Actor->GetName()));
-		hitResult->GetComponent()->AddImpulseAtLocation(forward * -power, hitResult->ImpactPoint);
+		/*DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *hitResult->Actor->GetName()));*/
+		//hitResult->GetComponent()->AddImpulseAtLocation(forward * power, hitResult->ImpactPoint);
+		hitResult->GetComponent()->AddImpulse(forward * power);
 	}
 
 }

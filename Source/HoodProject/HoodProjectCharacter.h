@@ -34,6 +34,7 @@ public:
 
 protected:
 	virtual void BeginPlay();
+	void Tick(float DeltaTime);
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -109,6 +110,7 @@ public:
 	bool crouched = false;
 	void Crouch();
 	float power = 1000000.f;
+	float powerOffset = 10000.f;
 	float maxPower = 1000000.f;
 	float minPower = 10000.f;
 	void ChangePower();
