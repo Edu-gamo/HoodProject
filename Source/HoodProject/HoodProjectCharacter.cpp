@@ -85,7 +85,7 @@ void AHoodProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("ChangePower", IE_Pressed, this, &AHoodProjectCharacter::ChangePower);
 	
 	PlayerInputComponent->BindAxis("ChangePowerValue", this, &AHoodProjectCharacter::ChangePowerValue);
-
+	
 	//// Bind fire event (Powers)
 	//PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ActivePower);
 	PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
@@ -219,7 +219,7 @@ void AHoodProjectCharacter::ActivePower() {
 		/*DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *hitResult->Actor->GetName()));*/
 		//hitResult->GetComponent()->AddImpulseAtLocation(forward * power, hitResult->ImpactPoint);
-		hitResult->GetComponent()->AddImpulse(forward * power);
+		if(hitResult->GetComponent()->Mobility == EComponentMobility::Movable) hitResult->GetComponent()->AddImpulse(forward * power);
 	}
 
 }
