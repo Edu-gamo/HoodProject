@@ -109,7 +109,7 @@ public:
 	void ChangeActivePowerPressed();
 	bool crouched = false;
 	void Crouch();
-	float power = 1000000.f;
+	float power = 500000.f;
 	float powerOffset = 10000.f;
 	float maxPower = 1000000.f;
 	float minPower = 10000.f;

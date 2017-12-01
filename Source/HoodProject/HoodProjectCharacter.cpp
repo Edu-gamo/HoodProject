@@ -219,7 +219,16 @@ void AHoodProjectCharacter::ActivePower() {
 		/*DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *hitResult->Actor->GetName()));*/
 		//hitResult->GetComponent()->AddImpulseAtLocation(forward * power, hitResult->ImpactPoint);
-		if(hitResult->GetComponent()->Mobility == EComponentMobility::Movable) hitResult->GetComponent()->AddImpulse(forward * power);
+		if (hitResult->GetComponent()->Mobility == EComponentMobility::Movable) {
+			FString materialColision = hitResult->GetComponent()->GetMaterial(0)->GetName();
+			if (materialColision.Contains("Metal")) {
+				if (hitResult->GetComponent()->GetMass() < 1000.f) {
+					hitResult->GetComponent()->AddImpulse(forward * power);
+				} else {
+					this->GetCapsuleComponent()->AddImpulse(forward * -power);
+				}
+			}
+		}
 	}
 
 }
