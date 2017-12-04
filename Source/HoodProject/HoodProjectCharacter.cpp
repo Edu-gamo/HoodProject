@@ -63,8 +63,11 @@ void AHoodProjectCharacter::BeginPlay()
 // Update
 void AHoodProjectCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime); // Call parent class tick function  
-
+	
+	//Falla al activar fisicas
+	if (activePowerPressed) this->GetCapsuleComponent()->SetSimulatePhysics(true);
 	if (activePowerPressed) ActivePower();
+	if (!activePowerPressed) this->GetCapsuleComponent()->SetSimulatePhysics(false);
 
 }
 
@@ -212,7 +215,7 @@ void AHoodProjectCharacter::ActivePower() {
 
 	FVector start = FirstPersonCameraComponent->GetComponentLocation();
 	FVector forward = FirstPersonCameraComponent->GetForwardVector();
-	FVector end = start+(forward * 5000.f);
+	FVector end = start+(forward * 5000.f); //Distancia de efecto
 	FCollisionQueryParams* params = new FCollisionQueryParams();
 
 	if (GetWorld()->LineTraceSingleByChannel(*hitResult, start, end, ECC_Visibility, *params)) {
@@ -222,7 +225,7 @@ void AHoodProjectCharacter::ActivePower() {
 		if (hitResult->GetComponent()->Mobility == EComponentMobility::Movable) {
 			FString materialColision = hitResult->GetComponent()->GetMaterial(0)->GetName();
 			if (materialColision.Contains("Metal")) {
-				if (hitResult->GetComponent()->GetMass() < 1000.f) {
+				if (hitResult->GetComponent()->GetMass() < 1000.f) { //Comprueba el peso del objeto
 					hitResult->GetComponent()->AddImpulse(forward * power);
 				} else {
 					this->GetCapsuleComponent()->AddImpulse(forward * -power);
