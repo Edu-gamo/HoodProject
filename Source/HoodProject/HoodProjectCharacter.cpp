@@ -227,7 +227,9 @@ void AHoodProjectCharacter::ActivePower() {
 			FString materialColision = hitResult->GetComponent()->GetMaterial(0)->GetName();
 			if (materialColision.Contains("Metal")) {
 				if (hitResult->GetComponent()->GetMass() < massLimitPower) { //Comprueba el peso del objeto
+					hitResult->GetComponent()->SetEnableGravity(false);
 					hitResult->GetComponent()->AddImpulse(forward * power);
+					hitResult->GetComponent()->SetEnableGravity(true);
 				} else {
 					this->GetCapsuleComponent()->SetSimulatePhysics(true);
 					this->GetCapsuleComponent()->AddImpulse(forward * -power);
