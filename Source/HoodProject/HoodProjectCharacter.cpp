@@ -64,17 +64,13 @@ void AHoodProjectCharacter::BeginPlay()
 void AHoodProjectCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime); // Call parent class tick function  
 	
-	//Falla al activar fisicas
-	//if (activePowerPressed) this->GetCapsuleComponent()->SetSimulatePhysics(true);
-	this->GetCapsuleComponent()->SetSimulatePhysics(false);
 	if (activePowerPressed) ActivePower();
-	//if (!activePowerPressed) this->GetCapsuleComponent()->SetSimulatePhysics(false);
 
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Input
 
+// Input
 void AHoodProjectCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// set up gameplay key bindings
@@ -222,7 +218,6 @@ void AHoodProjectCharacter::ActivePower() {
 	if (GetWorld()->LineTraceSingleByChannel(*hitResult, start, end, ECC_Visibility, *params)) {
 		/*DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *hitResult->Actor->GetName()));*/
-		//hitResult->GetComponent()->AddImpulseAtLocation(forward * power, hitResult->ImpactPoint);
 		if (hitResult->GetComponent()->Mobility == EComponentMobility::Movable) {
 			FString materialColision = hitResult->GetComponent()->GetMaterial(0)->GetName();
 			if (materialColision.Contains("Metal")) {
@@ -231,8 +226,7 @@ void AHoodProjectCharacter::ActivePower() {
 					hitResult->GetComponent()->AddImpulse(forward * power);
 					hitResult->GetComponent()->SetEnableGravity(true);
 				} else {
-					this->GetCapsuleComponent()->SetSimulatePhysics(true);
-					this->GetCapsuleComponent()->AddImpulse(forward * -power);
+					AddMovementInput(forward, -power/maxPower);
 				}
 			}
 		}
