@@ -23,7 +23,7 @@ AHoodProjectCharacter::AHoodProjectCharacter()
 
 	PrimaryActorTick.bCanEverTick = true; //Activa la funcion tick (update)
 
-	// Set size for collision capsule
+										  // Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
 	// set our turn rates for input
@@ -63,9 +63,29 @@ void AHoodProjectCharacter::BeginPlay()
 // Update
 void AHoodProjectCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime); // Call parent class tick function  
-	
-	if (activePowerPressed) ActivePower();
 
+	//if (activePowerPressed) ActivePower();
+	if (lastObjectOutlined != nullptr) {
+		if (lastObjectOutlined->GetActor()->GetName().Equals("Keys")) {
+			Cast<UPrimitiveComponent>(lastObjectOutlined->GetActor()->GetAttachParentActor()->GetRootComponent())->SetRenderCustomDepth(false);
+		}
+		else {
+			lastObjectOutlined->GetComponent()->SetRenderCustomDepth(false);
+		}
+		lastObjectOutlined = nullptr;
+	}
+	lastObjectOutlined = ActivePower();
+
+}
+
+void AHoodProjectCharacter::NotifyActorBeginOverlap(AActor* other) {
+	if (other->GetName().Equals("Keys")) {
+		if (lastObjectOutlined != nullptr) {
+			if (lastObjectOutlined->GetActor()->GetName().Equals("Keys")) lastObjectOutlined = nullptr;
+		}
+		other->GetAttachParentActor()->Destroy();
+		other->Destroy();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,9 +103,9 @@ void AHoodProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AHoodProjectCharacter::Crouch);
 
 	PlayerInputComponent->BindAction("ChangePower", IE_Pressed, this, &AHoodProjectCharacter::ChangePower);
-	
+
 	PlayerInputComponent->BindAxis("ChangePowerValue", this, &AHoodProjectCharacter::ChangePowerValue);
-	
+
 	//// Bind fire event (Powers)
 	//PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ActivePower);
 	PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
@@ -173,7 +193,7 @@ bool AHoodProjectCharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &AHoodProjectCharacter::EndTouch);
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -189,7 +209,8 @@ void AHoodProjectCharacter::ChangePowerValue(float value) {
 	if (power > 0) {
 		power += value * powerOffset;
 		FMath::Clamp<float>(power, minPower, maxPower);
-	} else {
+	}
+	else {
 		power -= value * powerOffset;
 		FMath::Clamp<float>(power, -maxPower, -minPower);
 	}
@@ -206,30 +227,49 @@ void AHoodProjectCharacter::Crouch() {
 	}
 }
 
-void AHoodProjectCharacter::ActivePower() {
+FHitResult* AHoodProjectCharacter::ActivePower() {
 
 	FHitResult* hitResult = new FHitResult();
 
 	FVector start = FirstPersonCameraComponent->GetComponentLocation();
 	FVector forward = FirstPersonCameraComponent->GetForwardVector();
-	FVector end = start+(forward * distancePower); //Distancia de efecto del poder
+	FVector end = start + (forward * distancePower); //Distancia de efecto del poder
 	FCollisionQueryParams* params = new FCollisionQueryParams();
+
+	bool hitMetalObject = false;
 
 	if (GetWorld()->LineTraceSingleByChannel(*hitResult, start, end, ECC_Visibility, *params)) {
 		/*DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *hitResult->Actor->GetName()));*/
-		if (hitResult->GetComponent()->Mobility == EComponentMobility::Movable) {
-			FString materialColision = hitResult->GetComponent()->GetMaterial(0)->GetName();
-			if (materialColision.Contains("Metal")) {
-				if (hitResult->GetComponent()->GetMass() < massLimitPower) { //Comprueba el peso del objeto
-					hitResult->GetComponent()->SetEnableGravity(false);
-					hitResult->GetComponent()->AddImpulse(forward * power);
-					hitResult->GetComponent()->SetEnableGravity(true);
-				} else {
-					AddMovementInput(forward, -power/maxPower);
+		if (hitResult->GetActor()->GetName().Equals("Keys")) {
+			Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->SetRenderCustomDepth(true);
+			hitMetalObject = true;
+			if (activePowerPressed) {
+				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->SetEnableGravity(false);
+				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->AddImpulse(forward * power);
+				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->SetEnableGravity(true);
+			}
+		}
+		else {
+			if (hitResult->GetComponent()->Mobility == EComponentMobility::Movable) {
+				FString materialColision = hitResult->GetComponent()->GetMaterial(0)->GetName();
+				if (materialColision.Contains("Metal")) {
+					hitResult->GetComponent()->SetRenderCustomDepth(true);
+					hitMetalObject = true;
+					if (activePowerPressed) {
+						if (hitResult->GetComponent()->GetMass() < massLimitPower) { //Comprueba el peso del objeto
+							hitResult->GetComponent()->SetEnableGravity(false);
+							hitResult->GetComponent()->AddImpulse(forward * power);
+							hitResult->GetComponent()->SetEnableGravity(true);
+						}
+						else {
+							AddMovementInput(forward, -power / maxPower);
+						}
+					}
 				}
 			}
 		}
 	}
 
+	return hitMetalObject ? hitResult : nullptr;
 }
