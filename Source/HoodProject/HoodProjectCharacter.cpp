@@ -64,12 +64,7 @@ void AHoodProjectCharacter::BeginPlay()
 void AHoodProjectCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime); // Call parent class tick function  
 	
-	//if (activePowerPressed) ActivePower();
-	if (lastObjectOutlined != nullptr) {
-		lastObjectOutlined->SetRenderCustomDepth(false);
-		lastObjectOutlined = nullptr;
-	}
-	lastObjectOutlined = ActivePower();
+	if (activePowerPressed) ActivePower();
 
 }
 
@@ -211,7 +206,7 @@ void AHoodProjectCharacter::Crouch() {
 	}
 }
 
-UPrimitiveComponent* AHoodProjectCharacter::ActivePower() {
+void AHoodProjectCharacter::ActivePower() {
 
 	FHitResult* hitResult = new FHitResult();
 
@@ -220,27 +215,21 @@ UPrimitiveComponent* AHoodProjectCharacter::ActivePower() {
 	FVector end = start+(forward * distancePower); //Distancia de efecto del poder
 	FCollisionQueryParams* params = new FCollisionQueryParams();
 
-	bool hitMetalObject = false;
-
 	if (GetWorld()->LineTraceSingleByChannel(*hitResult, start, end, ECC_Visibility, *params)) {
 		/*DrawDebugLine(GetWorld(), start, end, FColor::Red, true);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *hitResult->Actor->GetName()));*/
 		if (hitResult->GetComponent()->Mobility == EComponentMobility::Movable) {
 			FString materialColision = hitResult->GetComponent()->GetMaterial(0)->GetName();
 			if (materialColision.Contains("Metal")) {
-				hitResult->GetComponent()->SetRenderCustomDepth(true);
-				if (activePowerPressed) {
-					if (hitResult->GetComponent()->GetMass() < massLimitPower) { //Comprueba el peso del objeto
-						hitResult->GetComponent()->SetEnableGravity(false);
-						hitResult->GetComponent()->AddImpulse(forward * power);
-						hitResult->GetComponent()->SetEnableGravity(true);
-					} else {
-						AddMovementInput(forward, -power / maxPower);
-					}
+				if (hitResult->GetComponent()->GetMass() < massLimitPower) { //Comprueba el peso del objeto
+					hitResult->GetComponent()->SetEnableGravity(false);
+					hitResult->GetComponent()->AddImpulse(forward * power);
+					hitResult->GetComponent()->SetEnableGravity(true);
+				} else {
+					AddMovementInput(forward, -power/maxPower);
 				}
 			}
 		}
 	}
 
-	return hitMetalObject ? hitResult->GetComponent() : nullptr;
 }

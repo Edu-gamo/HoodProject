@@ -117,7 +117,5 @@ public:
 	float massLimitPower = 100.f;
 	void ChangePower();
 	void ChangePowerValue(float value);
-	UPrimitiveComponent* ActivePower();
-
-	UPrimitiveComponent* lastObjectOutlined = nullptr;
+	void ActivePower();
 };
