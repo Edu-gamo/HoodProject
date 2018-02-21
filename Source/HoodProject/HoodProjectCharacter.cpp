@@ -85,6 +85,11 @@ void AHoodProjectCharacter::NotifyActorBeginOverlap(AActor* other) {
 		}
 		other->GetAttachParentActor()->Destroy();
 		other->Destroy();
+		hasKeys = true;
+	} else if (other->GetName().Equals("PrisonDoorTrigger")) {
+		if (hasKeys && interact) {
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *other->GetAttachParentActor()->GetName());
+		}
 	}
 }
 
@@ -110,6 +115,9 @@ void AHoodProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	//PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ActivePower);
 	PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
 	PlayerInputComponent->BindAction("ActivePower", IE_Released, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
+
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AHoodProjectCharacter::ChangeInteract);
+	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AHoodProjectCharacter::ChangeInteract);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -199,6 +207,10 @@ bool AHoodProjectCharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 
 void AHoodProjectCharacter::ChangeActivePowerPressed() {
 	activePowerPressed = !activePowerPressed;
+}
+
+void AHoodProjectCharacter::ChangeInteract() {
+	interact = !interact;
 }
 
 void AHoodProjectCharacter::ChangePower() {

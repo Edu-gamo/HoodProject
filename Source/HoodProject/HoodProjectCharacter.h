@@ -121,4 +121,9 @@ public:
 	FHitResult* ActivePower();
 
 	FHitResult* lastObjectOutlined = nullptr;
+
+	bool interact = false;
+	void ChangeInteract();
+
+	bool hasKeys = false;
 };
