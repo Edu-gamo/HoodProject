@@ -79,7 +79,7 @@ void AHoodProjectCharacter::Tick(float DeltaTime) {
 }
 
 void AHoodProjectCharacter::NotifyActorBeginOverlap(AActor* other) {
-	if (other->GetName().Equals("Keys")) {
+	/*if (other->GetName().Equals("Keys")) {
 		if (lastObjectOutlined != nullptr) {
 			if (lastObjectOutlined->GetActor()->GetName().Equals("Keys")) lastObjectOutlined = nullptr;
 		}
@@ -90,7 +90,7 @@ void AHoodProjectCharacter::NotifyActorBeginOverlap(AActor* other) {
 		if (hasKeys && interact) {
 			UE_LOG(LogTemp, Warning, TEXT("%s"), *other->GetAttachParentActor()->GetName());
 		}
-	}
+	}*/
 }
 
 //////////////////////////////////////////////////////////////////////////
