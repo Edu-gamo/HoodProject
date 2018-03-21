@@ -106,11 +106,11 @@ public:
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 
-	bool activePowerPressed = false;
+	//bool activePowerPressed = false;
 	void ChangeActivePowerPressed();
 	bool crouched = false;
 	void Crouch();
-	float power = 1000.f;
+	//float power = 1000.f;
 	float powerOffset = 100.f;
 	float maxPower = 10000.f;
 	float minPower = 100.f;
@@ -126,4 +126,12 @@ public:
 	void ChangeInteract();
 
 	bool hasKeys = false;
+	bool powerPush = true;
+
+	/*Player current power level*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER") 
+		float power = 1000.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
+		bool activePowerPressed = false;
 };
