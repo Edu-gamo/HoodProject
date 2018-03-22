@@ -64,7 +64,7 @@ void AHoodProjectCharacter::BeginPlay()
 void AHoodProjectCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime); // Call parent class tick function  
 
-	//if (activePowerPressed) ActivePower();
+							//if (activePowerPressed) ActivePower();
 	if (lastObjectOutlined != nullptr) {
 		if (lastObjectOutlined->GetActor()->GetName().Equals("Keys")) {
 			Cast<UPrimitiveComponent>(lastObjectOutlined->GetActor()->GetAttachParentActor()->GetRootComponent())->SetRenderCustomDepth(false);
@@ -79,18 +79,14 @@ void AHoodProjectCharacter::Tick(float DeltaTime) {
 }
 
 void AHoodProjectCharacter::NotifyActorBeginOverlap(AActor* other) {
-	/*if (other->GetName().Equals("Keys")) {
+	if (other->GetName().Equals("Keys")) {
 		if (lastObjectOutlined != nullptr) {
 			if (lastObjectOutlined->GetActor()->GetName().Equals("Keys")) lastObjectOutlined = nullptr;
 		}
 		other->GetAttachParentActor()->Destroy();
 		other->Destroy();
 		hasKeys = true;
-	} else if (other->GetName().Equals("PrisonDoorTrigger")) {
-		if (hasKeys && interact) {
-			UE_LOG(LogTemp, Warning, TEXT("%s"), *other->GetAttachParentActor()->GetName());
-		}
-	}*/
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -250,7 +246,7 @@ FHitResult* AHoodProjectCharacter::ActivePower() {
 		if (hitResult->GetActor()->GetName().Equals("Keys")) {
 			Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->SetRenderCustomDepth(true);
 			hitMetalObject = true;
-			if (activePowerPressed) {
+			if (activePowerPressed && power > 0) {
 				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->SetEnableGravity(false);
 				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->AddImpulse(forward * (powerPush ? power : -power));
 				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->SetEnableGravity(true);
@@ -262,7 +258,7 @@ FHitResult* AHoodProjectCharacter::ActivePower() {
 				if (materialColision.Contains("Metal")) {
 					hitResult->GetComponent()->SetRenderCustomDepth(true);
 					hitMetalObject = true;
-					if (activePowerPressed) {
+					if (activePowerPressed && power > 0) {
 						if (hitResult->GetComponent()->GetMass() < massLimitPower) { //Comprueba el peso del objeto
 							hitResult->GetComponent()->SetEnableGravity(false);
 							hitResult->GetComponent()->AddImpulse(forward * (powerPush ? power : -power));

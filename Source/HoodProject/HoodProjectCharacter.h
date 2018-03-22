@@ -106,13 +106,9 @@ public:
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 
-	//bool activePowerPressed = false;
 	void ChangeActivePowerPressed();
 	bool crouched = false;
 	void Crouch();
-	//float power = 1000.f;
-	//float powerOffset = 100.f;
-	//float maxPower = 10000.f;
 	float distancePower = 5000.f;
 	float massLimitPower = 100.f;
 	void ChangePower();
@@ -124,23 +120,25 @@ public:
 	bool interact = false;
 	void ChangeInteract();
 
-	bool hasKeys = false;
+	/*Indica si tiene llaves*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "KEYS")
+		bool hasKeys = false;
 
 	bool powerPush = true;
 
 	/*Cantidad de poder utilizado*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER") 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 		float power = 1000.f;
 
 	/*Indica si se esta utilizando el poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 		bool activePowerPressed = false;
 
-	/*Indica si se esta utilizando el poder*/
+	/*Cantidad maxima de poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 		float maxPower = 10000.f;
 
-	/*Indica si se esta utilizando el poder*/
+	/*Cantidad de variacion de poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 		float powerOffset = 100.f;
 
