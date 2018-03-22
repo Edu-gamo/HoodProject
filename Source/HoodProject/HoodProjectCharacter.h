@@ -111,9 +111,8 @@ public:
 	bool crouched = false;
 	void Crouch();
 	//float power = 1000.f;
-	float powerOffset = 100.f;
-	float maxPower = 10000.f;
-	float minPower = 100.f;
+	//float powerOffset = 100.f;
+	//float maxPower = 10000.f;
 	float distancePower = 5000.f;
 	float massLimitPower = 100.f;
 	void ChangePower();
@@ -126,12 +125,23 @@ public:
 	void ChangeInteract();
 
 	bool hasKeys = false;
+
 	bool powerPush = true;
 
-	/*Player current power level*/
+	/*Cantidad de poder utilizado*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER") 
 		float power = 1000.f;
 
+	/*Indica si se esta utilizando el poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 		bool activePowerPressed = false;
+
+	/*Indica si se esta utilizando el poder*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
+		float maxPower = 10000.f;
+
+	/*Indica si se esta utilizando el poder*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
+		float powerOffset = 100.f;
+
 };

@@ -214,18 +214,12 @@ void AHoodProjectCharacter::ChangeInteract() {
 }
 
 void AHoodProjectCharacter::ChangePower() {
-	power *= -1;
+	powerPush = !powerPush;
 }
 
 void AHoodProjectCharacter::ChangePowerValue(float value) {
-	if (power > 0) {
-		power += value * powerOffset;
-		FMath::Clamp<float>(power, minPower, maxPower);
-	}
-	else {
-		power -= value * powerOffset;
-		FMath::Clamp<float>(power, -maxPower, -minPower);
-	}
+	power += value * powerOffset;
+	power = FMath::Clamp<float>(power, 0.f, maxPower);
 }
 
 void AHoodProjectCharacter::Crouch() {
@@ -258,7 +252,7 @@ FHitResult* AHoodProjectCharacter::ActivePower() {
 			hitMetalObject = true;
 			if (activePowerPressed) {
 				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->SetEnableGravity(false);
-				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->AddImpulse(forward * power);
+				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->AddImpulse(forward * (powerPush ? power : -power));
 				Cast<UPrimitiveComponent>(hitResult->GetActor()->GetAttachParentActor()->GetRootComponent())->SetEnableGravity(true);
 			}
 		}
@@ -271,11 +265,11 @@ FHitResult* AHoodProjectCharacter::ActivePower() {
 					if (activePowerPressed) {
 						if (hitResult->GetComponent()->GetMass() < massLimitPower) { //Comprueba el peso del objeto
 							hitResult->GetComponent()->SetEnableGravity(false);
-							hitResult->GetComponent()->AddImpulse(forward * power);
+							hitResult->GetComponent()->AddImpulse(forward * (powerPush ? power : -power));
 							hitResult->GetComponent()->SetEnableGravity(true);
 						}
 						else {
-							AddMovementInput(forward, -power / maxPower);
+							AddMovementInput(forward, (powerPush ? -power : power) / maxPower);
 						}
 					}
 				}
