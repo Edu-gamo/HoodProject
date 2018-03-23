@@ -123,7 +123,8 @@ public:
 	/*Indica si tiene llaves*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "KEYS")
 		bool hasKeys = false;
-
+	/*Poder push o pull*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 	bool powerPush = true;
 
 	/*Cantidad de poder utilizado*/
