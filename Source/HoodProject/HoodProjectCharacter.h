@@ -141,6 +141,6 @@ public:
 
 	/*Cantidad de variacion de poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
-		float powerOffset = 100.f;
+		float powerOffset = 500.f;
 
 };
