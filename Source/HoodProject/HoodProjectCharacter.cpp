@@ -273,5 +273,7 @@ FHitResult* AHoodProjectCharacter::ActivePower() {
 		}
 	}
 
+	hitPoint = hitResult->ImpactPoint;
+
 	return hitMetalObject ? hitResult : nullptr;
 }
