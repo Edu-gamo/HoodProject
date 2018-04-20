@@ -142,5 +142,8 @@ public:
 	/*Cantidad de variacion de poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 		float powerOffset = 500.f;
+	/*Distancia poder*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
+		FVector hitPoint;
 
 };
