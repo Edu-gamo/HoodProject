@@ -123,13 +123,14 @@ public:
 	/*Indica si tiene llaves*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "KEYS")
 		bool hasKeys = false;
+
 	/*Poder push o pull*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
-	bool powerPush = true;
+		bool powerPush = true;
 
 	/*Cantidad de poder utilizado*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
-		float power = 1000.f;
+		float power = 500.f;
 
 	/*Indica si se esta utilizando el poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
@@ -137,13 +138,17 @@ public:
 
 	/*Cantidad maxima de poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
-		float maxPower = 10000.f;
+		float maxPower = 1000.f;
 
 	/*Cantidad de variacion de poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
-		float powerOffset = 500.f;
+		float powerOffset = 100.f;
 	/*Distancia poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 		FVector hitPoint;
+
+	/*Indica si se esta transportando un objeto*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
+		bool isHoldingObject = false;
 
 };

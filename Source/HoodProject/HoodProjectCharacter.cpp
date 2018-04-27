@@ -214,8 +214,10 @@ void AHoodProjectCharacter::ChangePower() {
 }
 
 void AHoodProjectCharacter::ChangePowerValue(float value) {
-	power += value * powerOffset;
-	power = FMath::Clamp<float>(power, 0.f, maxPower);
+	if (!isHoldingObject) {
+		power += value * powerOffset;
+		power = FMath::Clamp<float>(power, 0.f, maxPower);
+	}
 }
 
 void AHoodProjectCharacter::Crouch() {
