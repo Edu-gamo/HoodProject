@@ -79,9 +79,9 @@ void AHoodProjectCharacter::Tick(float DeltaTime) {
 }
 
 void AHoodProjectCharacter::NotifyActorBeginOverlap(AActor* other) {
-	static ConstructorHelpers::FObjectFinder<USoundBase> Soundf(TEXT("/Musica/llaveColision_snd"));
+	/*static ConstructorHelpers::FObjectFinder<USoundBase> Soundf(TEXT("/Musica/llaveColision_snd"));
 	USoundBase* snd_key = Soundf.Object;
-	UGameplayStatics::PlaySound2D(this, snd_key);
+	UGameplayStatics::PlaySound2D(this, snd_key);*/
 	if (other->GetName().Equals("Keys")) {
 		if (lastObjectOutlined != nullptr) {
 			if (lastObjectOutlined->GetActor()->GetName().Equals("Keys")) lastObjectOutlined = nullptr;
