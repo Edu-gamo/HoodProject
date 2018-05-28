@@ -216,19 +216,18 @@ void AHoodProjectCharacter::ChangePower() {
 	powerPush = !powerPush;
 }
 
-void AHoodProjectCharacter::ChangePowerValue(float value) {
+/*void AHoodProjectCharacter::ChangePowerValue(float value) {
 	if (!isHoldingObject) {
 		power += value * powerOffset;
 		power = FMath::Clamp<float>(power, 0.f, maxPower);
 	}
-}
+}*/
 
 void AHoodProjectCharacter::Crouch() {
 	if (!crouched) {
 		ACharacter::Crouch(true);
 		crouched = true;
-	}
-	else {
+	} else {
 		ACharacter::UnCrouch(true);
 		crouched = false;
 	}
@@ -268,10 +267,9 @@ FHitResult* AHoodProjectCharacter::ActivePower() {
 							hitResult->GetComponent()->SetEnableGravity(false);
 							hitResult->GetComponent()->AddImpulse(forward * (powerPush ? power : -power));
 							hitResult->GetComponent()->SetEnableGravity(true);
-						}
-						else {
+						} /*else {
 							AddMovementInput(forward, (powerPush ? -power : power) / maxPower);
-						}
+						}*/
 					}
 				}
 			}

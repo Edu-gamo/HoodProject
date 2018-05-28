@@ -137,12 +137,13 @@ public:
 		bool activePowerPressed = false;
 
 	/*Cantidad maxima de poder*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
-		float maxPower = 1000.f;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
+		float maxPower = 1000.f;*/
 
 	/*Cantidad de variacion de poder*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
-		float powerOffset = 100.f;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
+		float powerOffset = 100.f;*/
+
 	/*Distancia poder*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POWER")
 		FVector hitPoint;
