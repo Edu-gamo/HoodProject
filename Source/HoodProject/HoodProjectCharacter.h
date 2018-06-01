@@ -107,6 +107,8 @@ public:
 
 
 	void ChangeActivePowerPressed();
+	void ActivatePower();
+	void DesactivatePower();
 	bool crouched = false;
 	void Crouch();
 	float distancePower = 5000.f;

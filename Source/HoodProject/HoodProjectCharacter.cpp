@@ -111,9 +111,10 @@ void AHoodProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	//PlayerInputComponent->BindAxis("ChangePowerValue", this, &AHoodProjectCharacter::ChangePowerValue);
 
 	//// Bind fire event (Powers)
-	//PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ActivePower);
-	PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
-	PlayerInputComponent->BindAction("ActivePower", IE_Released, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
+	PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ActivatePower);
+	PlayerInputComponent->BindAction("ActivePower", IE_Released, this, &AHoodProjectCharacter::DesactivatePower);
+	/*PlayerInputComponent->BindAction("ActivePower", IE_Pressed, this, &AHoodProjectCharacter::ChangeActivePowerPressed);
+	PlayerInputComponent->BindAction("ActivePower", IE_Released, this, &AHoodProjectCharacter::ChangeActivePowerPressed);*/
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AHoodProjectCharacter::ChangeInteract);
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AHoodProjectCharacter::ChangeInteract);
@@ -206,6 +207,14 @@ bool AHoodProjectCharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 
 void AHoodProjectCharacter::ChangeActivePowerPressed() {
 	activePowerPressed = !activePowerPressed;
+}
+
+void AHoodProjectCharacter::ActivatePower() {
+	activePowerPressed = true;
+}
+
+void AHoodProjectCharacter::DesactivatePower() {
+	activePowerPressed = false;
 }
 
 void AHoodProjectCharacter::ChangeInteract() {
